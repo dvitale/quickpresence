@@ -1,0 +1,140 @@
+<script> var filename="worktimefm2.html";</script>
+
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+    <link rel="stylesheet" href="/statics/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+	<title>Ore Totali</title>
+
+    <style>
+:root {
+  --primary-color: #3498db;
+  --card-bg: #2c3e50;
+  --body-bg: #1a1a1a;
+  --light-text: #ffffff;
+  --navbar-bg: #0d1620;
+  --table-header-bg: #2c3e50;
+  --table-stripe-bg: #243342;
+}
+
+.w3-allerta {
+  font-family: "Consolas", Sans-serif;
+}
+
+a { 
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+body {
+  background-color: var(--body-bg);
+  color: var(--light-text);
+}
+
+.w3-bar {
+  background-color: var(--navbar-bg) !important;
+}
+
+.w3-table {
+  color: var(--light-text);
+  background-color: var(--card-bg);
+}
+
+tr {
+  background-color: var(--card-bg);
+}
+
+.w3-pale-blue {
+  background-color: var(--table-header-bg) !important;
+  color: var(--light-text) !important;
+}
+
+.w3-btn, .w3-button {
+  color: var(--light-text) !important;
+  background-color: var(--primary-color) !important;
+}
+
+.w3-btn:hover, .w3-button:hover {
+  background-color: #2980b9 !important;
+}
+    
+	</style>
+    
+	<script type="text/javascript" src="/js/FileSaver.js"></script>
+    <script type="text/javascript" src="/js/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="/js/tableexport.js"></script>
+</head>
+<body>
+
+<div class="w3-bar w3-sand" style="position:sticky; top:0">
+ <a href="#" onclick="location='/home'" class="w3-border w3-bar-item w3-btn w3-round-large w3-right" >GO Home</a>
+
+  <a href="#" onclick="location='/get_time'" class="w3-bar-item w3-button"><img src="/statics/ionicons/png/512/arrow-return-left.png" class="w3-image" style="width:30px;height:30px;"></a>
+		<div class="w3-half">
+
+		</div>
+</div>
+
+<div class="w3-container">
+
+	<table id="mainTable" class="w3-table w3-bordered  w3-centered w3-tiny ">
+		<thead>
+		<tr class="w3-pale-blue">			
+			<th>Chi</th>
+			<th>Giorno</th>
+			<th>Ore</th>
+			<th>Note</th>
+			<th>Remote</th>
+		</tr>
+		</thead>
+		<tbody>
+		 {{range . }}
+
+		<tr>
+			<td  style="font-family: consolas;">{{.Chi}}</td>
+			<td  style="font-family: consolas;">{{.Quando_g}}</td>
+			<td style="font-family: consolas;">{{.Htot}} </td>
+			<td style="font-family: consolas;">{{.Note}} </td>
+			<td style="font-family: consolas;">{{.Remote}} </td>
+	</tr>
+            {{end}}
+	</tbody>
+	</table>
+</div>
+
+<script>
+      //  TableExport(document.getElementById("usrtable"));
+TableExport(document.getElementById("mainTable"), {
+    headers: true,                              // (Boolean), display table headers (th or td elements) in the <thead>, (default: true)
+    footers: false,                              // (Boolean), display table footers (th or td elements) in the <tfoot>, (default: false)
+    formats: ['xls', 'csv', 'txt'],             // (String[]), filetype(s) for the export, (default: ['xls', 'csv', 'txt'])
+    filename: 'exported',                             // (id, String), filename for the downloaded file, (default: 'id')
+    bootstrap: true,                           // (Boolean), style buttons using bootstrap, (default: true)
+    exportButtons: true,                        // (Boolean), automatically generate the built-in export buttons for each of the specified formats (default: true)
+    position: 'top',                         // (top, bottom), position of the caption element relative to table, (default: 'bottom')
+    ignoreRows: null,                           // (Number, Number[]), row indices to exclude from the exported file(s) (default: null)
+    ignoreCols: null,                           // (Number, Number[]), column indices to exclude from the exported file(s) (default: null)
+    trimWhitespace: true                        // (Boolean), remove all leading/trailing newlines, spaces, and tabs from cell text in the exported file(s) (default: false)
+})
+</script>
+
+</body>
+
+<script>
+ window.addEventListener("load", function(){
+
+	var isEmptyDay = (1 == document.getElementById('mainTable').rows.length);
+	if (isEmptyDay) {
+	document.getElementById('sick').style.visibility='visible';
+	}
+});
+
+</script>
+</html>
+<!-- worktimefm.html -->

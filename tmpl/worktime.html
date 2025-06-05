@@ -1,0 +1,230 @@
+<script> var filename="worktime.html";</script>
+
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+    <link rel="stylesheet" href="/statics/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+	<title>Ore Totali</title>
+
+    <style>
+.w3-allerta {
+  font-family: "Consolas", Sans-serif;
+}
+    a {  text-decoration: none; }
+    
+body {
+    background-color: #1e1e1e;
+    color: #ffffff;
+}
+
+.w3-table {
+    background-color: #2d2d2d;
+    color: #ffffff;
+}
+
+.w3-striped tbody tr:nth-child(even) {
+    background-color: #363636;
+}
+
+.w3-light-grey {
+    background-color: #404040 !important;
+    color: #ffffff !important;
+}
+
+.w3-blue-grey {
+    background-color: #2c3e50 !important;
+    color: #ffffff !important;
+}
+
+.w3-cyan {
+    background-color: #164e63 !important;
+    color: #ffffff !important;
+}
+
+.w3-btn {
+    background-color: #2d2d2d;
+    color: #ffffff;
+    border-color: #404040 !important;
+}
+
+.w3-btn:hover {
+    background-color: #404040 !important;
+}
+
+#sick .w3-btn {
+    background-color: #2d2d2d !important;
+}
+
+.w3-text-blue {
+    color: #60a5fa !important;
+}
+
+.w3-bordered {
+    border: 1px solid #404040;
+}
+    </style>
+    
+	<script type="text/javascript" src="/js/FileSaver.js"></script>
+    <script type="text/javascript" src="/js/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="/js/tableexport.js"></script>
+</head>
+<body>
+
+<div class="w3-bar w3-cyan" style="position:sticky; top:0">
+  <a href="#" onclick="location='/get_time'" class="w3-bar-item w3-button"><img src="/statics/ionicons/png/512/arrow-return-left.png" class="w3-image" style="width:30px;height:30px;"></a>
+		<div class="w3-half">
+		<div class="w3-bar-item w3-right"><span  id="ris">{{.Ris}}         </span> </div> 
+		<div class="w3-bar-item w3-right"><span id="quando_g">{{.Quando_g}}</span> </div>
+		</div>
+		<a href="#" onclick="location='/home'" class="w3-border w3-bar-item w3-btn w3-round-large w3-right" >GO Home</a>
+		<a href="#" onclick="gonext()" class="w3-bar-item w3-button w3-right"><img src="/statics/ionicons/png/512/arrow-right-b.png" class="w3-image w3-right" style="width:30px;height:30px;"></a>
+		<a href="#" onclick="goprec()" class="w3-bar-item w3-button w3-right"><img src="/statics/ionicons/png/512/arrow-left-b.png" class="w3-image w3-right" style="width:30px;height:30px;"></a>
+
+</div>
+
+<div class="w3-container">
+
+	<table id="mainTable" class="w3-table w3-bordered  w3-centered w3-tiny w3-striped">
+		<thead>
+		<tr class="w3-light-grey">			
+			<th>Chi</th>
+			<th>Giorno</th>
+			<th>Tipo operazione</th>
+			<th>Orario</th>
+			<th>Orario riveduto e corretto</th>
+			<th>Descrizione</th>
+		</tr>
+		</thead>
+		<tbody>
+		 {{range .Worktimes }}
+
+		<tr>
+			<td  style="font-family: consolas;">{{.Chi}}</td>
+			<td  style="font-family: consolas;">{{.Quando_g}}</td>
+			<td style="font-family: consolas;">{{.Operazione}} </td>
+			<td style="font-family: consolas;">{{.Quando_o}}</td>
+			<td style="font-family: consolas;">{{.Correct_o}} </td>
+			<td style="font-family: consolas;">{{.Nota}} </td>
+	</tr>
+            {{end}}
+	</tbody>
+	</table>
+	<div class="w3-container w3-blue-grey w3-center w3-allerta"> 
+		Totale ore (pausa compresa, esclusa eventuale entrata-senza-uscita attuale): {{.Htot}}
+	</div> 
+</div>
+
+<div id="sick" class="w3-container "  style="visibility:hidden;"> 
+	<p>
+	<div class="w3-btn w3-white  w3-border w3-round w3-block w3-hover-yellow" style="margin:0;padding:0" onclick="setDay('FERIE')">
+		<p>
+		<img src="/statics/images/vacation.jpg" style="width:38%">
+		<h4 class=" w3-text-blue">Inserimento giornata di ferie</h4>
+	</div>
+	<p>
+	<div class="w3-btn w3-white  w3-border w3-round w3-block w3-hover-yellow" style="margin:0;padding:0" onclick="setDay('MALATTIA')">
+		<p>
+		<img src="/statics/images/sick.jpg" style="width:33%">
+		<h4 class=" w3-text-blue">Inserimento giornata di malattia</h4>
+	</div>
+		<p>
+	<div class="w3-btn w3-white  w3-border w3-round w3-block w3-hover-yellow" style="margin:0;padding:0" onclick="setDay('PERMESSO')">
+		<p>
+		<img src="/statics/images/permesso.jpg" style="width:30%">
+		<h4 class=" w3-text-blue">Inserimento giornata di permesso</h4>
+	</div>
+</div>
+
+
+
+<script>
+//var table=document.getElementById('mainTable');
+//var name=table.rows[1].cells[0].innerText;
+//var date=table.rows[1].cells[1].innerText;
+
+var name=document.getElementById('ris').innerText;
+var date=document.getElementById('quando_g').innerText;
+var datep1=addDays(date, 1);
+var datem1=subDays(date, 1);
+
+function gonext(){
+	location="/wt?ris=" + name + "&quando_g=" + datep1;
+}
+
+function goprec() {
+	location="/wt?ris=" + name + "&quando_g=" + datem1;
+}
+
+function setDay(causale) {
+	location="/set_fullday?ris=" + name + "&quando_g=" + date + "&causale=" + causale;
+}
+
+
+function addDays(date, days) {
+ 
+  var today = new Date();
+  var d = new Date(date);
+  if (d.getDate()==today.getDate() && d.getMonth() == today.getMonth()) {
+	return date;
+  } //no increment over today
+  d.setDate(d.getDate() + days);
+  if ( d.getDay()%6 == 0 ) {  d.setDate(d.getDate() + 1);} //sabato
+  if ( d.getDay()%6 == 0 ) {  d.setDate(d.getDate() + 1);} //domenica
+  var datestring = d.getFullYear()  + "-" + lpad((d.getMonth()+1), 2) + "-" + lpad(d.getDate(), 2) ;
+  
+  return datestring;
+}
+
+function subDays(date, days) {
+  var d = new Date(date);
+  d.setDate(d.getDate() - days);
+  if ( d.getDay()%6 == 0 ) {  d.setDate(d.getDate() - 1);} //sabato
+  if ( d.getDay()%6 == 0 ) {  d.setDate(d.getDate() - 1);} //domenica
+  var datestring = d.getFullYear()  + "-" + lpad((d.getMonth()+1), 2) + "-" + lpad(d.getDate(), 2) ;
+  
+  return datestring;
+}
+
+function lpad(n, width, z) {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+</script>
+
+<script>
+      //  TableExport(document.getElementById("usrtable"));
+TableExport(document.getElementById("mainTable"), {
+    headers: true,                              // (Boolean), display table headers (th or td elements) in the <thead>, (default: true)
+    footers: false,                              // (Boolean), display table footers (th or td elements) in the <tfoot>, (default: false)
+    formats: ['xls', 'csv', 'txt'],             // (String[]), filetype(s) for the export, (default: ['xls', 'csv', 'txt'])
+    filename: 'exported',                             // (id, String), filename for the downloaded file, (default: 'id')
+    bootstrap: true,                           // (Boolean), style buttons using bootstrap, (default: true)
+    exportButtons: true,                        // (Boolean), automatically generate the built-in export buttons for each of the specified formats (default: true)
+    position: 'top',                         // (top, bottom), position of the caption element relative to table, (default: 'bottom')
+    ignoreRows: null,                           // (Number, Number[]), row indices to exclude from the exported file(s) (default: null)
+    ignoreCols: null,                           // (Number, Number[]), column indices to exclude from the exported file(s) (default: null)
+    trimWhitespace: true                        // (Boolean), remove all leading/trailing newlines, spaces, and tabs from cell text in the exported file(s) (default: false)
+})
+</script>
+
+</body>
+
+<script>
+ window.addEventListener("load", function(){
+
+	var isEmptyDay = (1 == document.getElementById('mainTable').rows.length);
+	if (isEmptyDay) {
+	document.getElementById('sick').style.visibility='visible';
+	}
+});
+
+</script>
+</html>
+<!-- worktime.html -->

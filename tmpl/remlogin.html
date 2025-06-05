@@ -1,0 +1,41 @@
+<script> var filename="remlogin.html";</script>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.9">
+    <link rel="stylesheet" href="/statics/ionicons/css/w3.css">
+    <link rel="stylesheet" href="/statics/ionicons/css/ionicons.min.css">
+    <title>Accessing the US HR system</title>
+    <style>
+        #login-form {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<!-- Login form -->
+<div id="login-form" class="w3-modal ">
+    <div class="w3-modal-content w3-card-8 w3-animate-zoom w3-sand" style="max-width:400px">
+	<div class="w3-panel w3-pale-green"><h3 class="w3-center">Verifica timbratura virtuale - step 2</h3></div>
+        <div class="w3-center"><br>
+
+            <img src="/statics/images/login_avatar.png" alt="gopher" style="width:20%" class="w3-circle w3-margin-top">
+        </div>
+
+        <form class="w3-container" action="/remtoken" method="post">
+            <div class="w3-section">
+<p> Inserisci il token ricevuto via email <br>(validità: 3 min)</p>
+                <input class="w3-input w3-border" type="text" placeholder="token" name="token" required>
+                <button class="w3-btn-block w3-pale-yellow w3-section w3-padding" type="submit">GO</button>
+            </div>
+        </form>
+
+
+    </div>
+</div>
+</body>
+</html>
+<!-- remlogin.html -->

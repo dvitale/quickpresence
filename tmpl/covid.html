@@ -1,0 +1,86 @@
+<script> var filename="covid_pres.html";</script>
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+   
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	
+	<title>HR Covid Check</title>
+   
+
+</head>
+<body>
+
+<div class="w3-bar w3-teal" style="position:sticky; top:0">
+  <a href="#" onclick="window.history.back();" class="w3-bar-item w3-button">Back</a>
+
+	<div class="w3-display-topmiddle">
+		<h4>Stato check green pass risorse (aggiornamento al <span id="currTime"></span>)</h4>
+
+	</div>	
+</div>
+
+	<table id="mainTable" class="w3-table w3-bordered w3-border ">
+		<thead>
+		<tr class="w3-light-grey">					
+			<th>Chi</th>
+			<th>Come</th>
+			<th>Da quando</th>
+			<th>Tele</th>
+			<th>Rilevazione GPass</th>
+						
+		</tr>
+		</thead>
+		
+		<tbody>
+		 {{range . }}
+
+		<tr {{if (eq .Stato "IN") }} {{if (eq "S" .Remote ) }} class='w3-yellow' {{else}} class='w3-green' {{end}} {{else}} class='w3-light-grey' {{end}} >
+
+			<td style="font-family: consolas;">{{.Chi}}</td>
+
+			<td style="font-family: consolas;">{{.Stato}}</td>
+			<td style="font-family: consolas;">{{.DataStato}}</td>
+			<td style="font-family: consolas;">{{.Remote}}</td>
+			<td style="font-family: consolas;">
+			{{if (eq .Stato "IN") }}
+				{{if (eq .Remote "N") }} 
+					{{if (eq .Rilevazione "") }}
+					<form action="/cov_save" method="POST">
+						<input type="text" name="rilevazione">
+						<input type="hidden" name="chi" value="{{.Chi}}">
+						<button class="w3-button w3-circle w3-teal">&check;</button>
+					</form>
+					{{else}} {{.Rilevazione}}  {{end}} {{end}} {{end}} 
+			</td>
+	
+		</tr>
+            {{end}}
+	</tbody>
+	</table>
+    </div>
+</div>
+
+
+</body>
+</html>
+
+<script>
+
+window.addEventListener('load', function(){
+
+	let today = new Date();
+
+	let date = today.getFullYear() + '-' + (today.getMonth()+1).toString().padStart(2, '0') + '-' + today.getDate().toString().padStart(2, '0');
+	let time = today.getHours().toString().padStart(2, '0') + ":" + today.getMinutes().toString().padStart(2, '0');
+	let currTime = date + ' ' + time;
+	console.log(currTime);
+	document.getElementById("currTime").innerText=currTime;
+	})
+	
+</script>
+<!-- list_pres.html -->

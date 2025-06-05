@@ -1,0 +1,204 @@
+<script> var filename="list_mydaytime.html";</script>
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+    <link rel="stylesheet" href="/statics/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	
+	<title>Elenco timbrature </title>
+
+    <style>
+    a {  text-decoration: none; }
+    
+	.closeBtn {
+		display: block;
+		width: 30px;
+		height: 30px;
+		position: absolute;
+		top: -10px;
+		right: -10px;
+		background-image: url('/statics/images/closeBtn.png');
+		text-indent: -9999px;
+		cursor: pointer;
+	}
+	</style>
+    
+
+	<script type="text/javascript" src="/js/FileSaver.js"></script>
+    <script type="text/javascript" src="/js/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="/js/tableexport.js"></script>
+</head>
+<body>
+
+<div class="w3-bar w3-teal" style="position:sticky; top:0">
+ <a href="#" onclick="location='/get_time'" class="w3-bar-item w3-button"><img src="/statics/ionicons/png/512/arrow-return-left.png" class="w3-image" style="width:30px;height:30px;"></a>
+		<div class="w3-half">
+		<div class="w3-bar-item w3-right"><span  id="ris">{{.Ris}}         </span> </div> 
+		<div class="w3-bar-item w3-right"><span id="quando_g">{{.Quando_g}}</span> </div>
+		</div>
+		<a href="#" onclick="gonext()" class="w3-bar-item w3-button w3-right"><img src="/statics/ionicons/png/512/arrow-right-b.png" class="w3-image w3-right" style="width:30px;height:30px;"></a>
+		<a href="#" onclick="goprec()" class="w3-bar-item w3-button w3-right"><img src="/statics/ionicons/png/512/arrow-left-b.png" class="w3-image w3-right" style="width:30px;height:30px;"></a>
+</div>
+
+	<table id="mainTable" class="w3-table w3-bordered w3-border w3-centered w3-tiny">
+		<thead>
+		<tr class="w3-light-grey">			
+			<th>Chi</th>
+			<th>#Rec</th>
+			<th>Giorno</th>
+			<th>Orario</th>
+			<th>Tipo operazione</th>
+			<th>Auto</th>
+			<th>Note</th>
+		</tr>
+		</thead>
+		<tbody>
+		 {{range .Worktimes }}
+
+		<tr>
+			<td style="font-family: consolas;">{{.Chi}}</td>
+			<td style="font-family: consolas;">{{.Id}}</td>
+			<td style="font-family: consolas;" class="tableexport-string target">{{.Quando_g}}</td>
+			<td style="font-family: consolas;">{{.Quando_o}}</td>
+			<td style="font-family: consolas;">{{.Operazione}} </td>
+			<td style="font-family: consolas;">{{.Auto}} </td>
+			<td style="font-family: consolas;">{{.Nota}} &nbsp; <a href="#" onclick="updateItem(this);"> <img src="/statics/ionicons/png/512/edit.png" width="14" height="16" ></a></td>
+	</tr>
+            {{end}}
+	</tbody>
+	</table>
+
+	<!-- Edit Item -->
+<div id="edit-form-item" class="w3-modal">
+	<div class="w3-modal-content w3-card-8 w3-animate-zoom" style="max-width: 45%;">
+		<!-- head -->
+		<div class="w3-container w3-teal">
+			<h4>Modifica Orario di lavoro</h4>
+			<a class="closeBtn" href="#" onclick="document.getElementById('edit-form-item').style.display='none'">X</a>
+		 </div>
+
+		<form class="w3-container" action="/update_nota" method="post">
+		
+			<label class="w3-label  w3-text-blue w3-small">Chi</label> 
+			<input readonly id="chi" class="w3-input w3-tiny w3-border w3-light-grey" type="text" name="ris" >
+			
+			<label class="w3-label  w3-text-blue w3-small">Giorno</label> 
+			<input readonly id="giorno" class="w3-input w3-tiny w3-border w3-light-grey" type="text" name="quando_g">
+							
+			<label class="w3-text-blue w3-label w3-small">Operazione</label> 
+			<input readonly id="operazione" class="w3-input w3-tiny w3-border w3-light-grey" type="text" name="operazione" >
+
+			<label class="w3-text-blue w3-label w3-small">Orario</label> 
+			<input readonly id="quando_o_old" class="w3-input w3-tiny w3-border w3-light-grey" type="text" name="quando_o_old" >
+			
+			<label class="w3-text-blue w3-label-w3-small">Nuova Nota</label> 
+			<textarea required id="nota" name="nota" class="w3-input w3-border w3-tiny w3-yellow" style="resize:none"></textarea>
+			<input type=hidden id="id" name="id">
+			<button class="w3-btn w3-teal w3-padding-small  w3-small w3-round  w3-margin-top w3-margin-bottom w3-right" type="submit">Save</button>
+
+		</form>
+	</div>
+</div>
+
+
+<script>
+//var table=document.getElementById('mainTable');
+//var name=table.rows[1].cells[0].innerText;
+//var date=table.rows[1].cells[1].innerText;
+
+var name=document.getElementById('ris').innerText;
+var date=document.getElementById('quando_g').innerText;
+var datep1=addDays(date, 1);
+var datem1=subDays(date, 1);
+
+function gonext(){
+	location="/list_mytime?ris=" + name + "&quando_g=" + datep1;
+}
+
+function goprec() {
+	location="/list_mytime?ris=" + name + "&quando_g=" + datem1;
+}
+
+function addDays(date, days) {
+ 
+  var today = new Date();
+  var d = new Date(date);
+  if (d.getDate()==today.getDate()) {
+	return date;
+  } //no increment over today
+  d.setDate(d.getDate() + days);
+  if ( d.getDay()%6 == 0 ) {  d.setDate(d.getDate() + 1);} //sabato
+  if ( d.getDay()%6 == 0 ) {  d.setDate(d.getDate() + 1);} //domenica
+  var datestring = d.getFullYear()  + "-" + lpad((d.getMonth()+1), 2) + "-" + lpad(d.getDate(), 2) ;
+  
+  return datestring;
+}
+
+function subDays(date, days) {
+  var d = new Date(date);
+  d.setDate(d.getDate() - days);
+  if ( d.getDay()%6 == 0 ) {  d.setDate(d.getDate() - 1);} //sabato
+  if ( d.getDay()%6 == 0 ) {  d.setDate(d.getDate() - 1);} //domenica
+  var datestring = d.getFullYear()  + "-" + lpad((d.getMonth()+1), 2) + "-" + lpad(d.getDate(), 2) ;
+  
+  return datestring;
+}
+
+function lpad(n, width, z) {
+  z = z || '0';
+  n = n + '';
+  return n.length >= width ? n : new Array(width - n.length + 1).join(z) + n;
+}
+</script>
+
+<script>
+function updateItem(e, op) {
+/*
+for (i=0;i<14;i++) {
+	console.log(i + "->" + e.parentNode.parentNode.childNodes[i].innerText);
+}*/
+	let ris = e.parentNode.parentNode.childNodes[1].innerText;
+	console.log ("ris= " + ris);
+	document.getElementById('chi').value = ris;
+	
+	console.log ("id= " + e.parentNode.parentNode.childNodes[3].innerText);
+	document.getElementById('id').value=e.parentNode.parentNode.childNodes[3].innerText;
+	
+	console.log ("quando_g= " + e.parentNode.parentNode.childNodes[5].innerText);
+	document.getElementById('giorno').value=e.parentNode.parentNode.childNodes[5].innerText;
+	
+	console.log ("quando_o_old= " + e.parentNode.parentNode.childNodes[7].innerText);
+	document.getElementById('quando_o_old').value= e.parentNode.parentNode.childNodes[7].innerText;
+	
+	console.log ("operazione= " + e.parentNode.parentNode.childNodes[9].innerText);
+	document.getElementById('operazione').value=e.parentNode.parentNode.childNodes[9].innerText;
+
+	console.log ("nota= " + e.parentNode.parentNode.childNodes[13].innerText);
+	document.getElementById('nota').value=e.parentNode.parentNode.childNodes[13].innerText;
+
+	document.getElementById('edit-form-item').style.display='block';
+}
+</script>
+<script>
+      //  TableExport(document.getElementById("usrtable"));
+TableExport(document.getElementById("mainTable"), {
+    headers: true,                              // (Boolean), display table headers (th or td elements) in the <thead>, (default: true)
+    footers: false,                              // (Boolean), display table footers (th or td elements) in the <tfoot>, (default: false)
+    formats: ['xls', 'csv', 'txt'],             // (String[]), filetype(s) for the export, (default: ['xls', 'csv', 'txt'])
+    filename: 'exported',                             // (id, String), filename for the downloaded file, (default: 'id')
+    bootstrap: true,                           // (Boolean), style buttons using bootstrap, (default: true)
+    exportButtons: true,                        // (Boolean), automatically generate the built-in export buttons for each of the specified formats (default: true)
+    position: 'top',                         // (top, bottom), position of the caption element relative to table, (default: 'bottom')
+    ignoreRows: null,                           // (Number, Number[]), row indices to exclude from the exported file(s) (default: null)
+    ignoreCols: null,                           // (Number, Number[]), column indices to exclude from the exported file(s) (default: null)
+    trimWhitespace: true                        // (Boolean), remove all leading/trailing newlines, spaces, and tabs from cell text in the exported file(s) (default: false)
+})
+</script>
+
+</body>
+</html>
+<!-- list_mydaytime.html -->

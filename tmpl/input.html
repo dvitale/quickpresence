@@ -1,0 +1,82 @@
+<script> var filename="input.html";</script>
+
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+    <link rel="stylesheet" href="/statics/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	
+
+</head>
+<body>
+
+<div class="w3-bar w3-teal" style="position:sticky; top:0">
+  <a href="#" onclick="location='/get_time'"   class="w3-border w3-bar-item w3-btn w3-round-large w3-right">GO to QR reader</a>
+  <a href="#" onclick="location='/list_pres'" class="w3-border w3-bar-item w3-btn w3-round-large w3-left" >GO to Logbook</a>
+
+		<h4 class="w3-center">HR Data</h4>
+</div>
+
+<div style="max-width:50%;margin:auto;" class=" w3-margin-top w3-center w3-container">            
+	<form id='f1' method="post">   
+	
+			<table class="w3-table w3-light-grey w3-bordered w3-border"><tr>
+				<td><label class="w3-label w3-small w3-right">Giornata di interesse</label></td>  
+				<td><input required class=" w3-small" id="quando_g" name="quando_g" type="date"></td>
+			</tr><tr>
+				<td><label class="w3-label w3-small w3-right">Risorsa</label></td>  
+				<td><select class=" w3-small" name="ris">
+				<option value=""> Tutti </option>
+					    {{range . }}
+						<option value="{{.Nome}}" title="{{.Id}}">{{.Nome}}</option>
+						{{end}}
+					</select></td>
+			</tr><tr>			  
+			  <td><button onclick="document.getElementById('f1').action='/wt';" class="w3-btn w3-teal w3-padding-small w3-round w3-left" type="submit">Go to get hours worked</button></td>
+			  <td><button onclick="setMonth();document.getElementById('f1').action='/wtfm';" class="w3-btn w3-teal w3-padding-small w3-round w3-left" type="submit">Go to get whole month</button></td>
+			  <td><button onclick="document.getElementById('f1').action='/list_daytime';"class="w3-btn w3-teal w3-padding-small w3-round w3-right" type="submit">&nbsp;Go to edit details&nbsp;</button></td>
+			</tr>
+			<tr><td></td><td><button onclick="document.getElementById('f1').action='/wdcal';" class="w3-btn w3-teal w3-padding-small w3-round w3-left" type="submit">Go to working days calendar</button></td><td></td></tr>
+			</table>
+	</form>
+</div>
+	 
+	 <div class="w3-container w3-center w3-cell-middle">
+<br>
+    <p>logbook:</p>
+  <img src="/statics/images/logbook.png" class="w3-round-small" alt="logbook" style="width:15%">
+
+  </div>
+
+</body>
+
+<script>
+
+function setMonth() {
+	
+	document.getElementById('quando_g').type='text';
+	let d = document.getElementById('quando_g').value;
+	let dm = d.substring(0,7) ;
+	document.getElementById('quando_g').value = dm +'%';
+	console.log(dm);
+	document.getElementById('f1').action='/wt';
+}
+
+ window.addEventListener("load", function(){
+
+	var today = new Date();
+	var dd = String(today.getDate()).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+	var yyyy = today.getFullYear();
+
+	var todaystr = yyyy + "-" + mm + "-" + dd;
+	document.getElementById('quando_g').value=todaystr;
+});
+</script>
+
+</html>
+<!-- input.html -->

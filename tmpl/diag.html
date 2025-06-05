@@ -1,0 +1,67 @@
+<script> var filename="diag.html";</script>
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+   
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	
+	<title>HR Diag</title>
+   
+
+</head>
+<body>
+
+<div class="w3-bar w3-teal w3-panel" >
+ 
+	<div class="w3-container">
+
+		<h4>Dati errati per operazione consecutiva duplicata</h4>
+
+	</div>	
+</div>
+
+<div class="w3-container">
+
+	<table id="mainTable" class="w3-table w3-bordered w3-border ">
+		<thead>
+		<tr class="w3-light-grey">					
+			<th>Id</th>
+			<th>Chi</th>
+			<th>Quando_g</th>
+			<th>Quando_o</th>
+			<th>Operazione</th>
+			<th>Prev_id</th>
+			<th>Remote</th>
+			<th>Auto</th>
+						
+		</tr>
+		</thead>
+		
+		<tbody>
+		 {{range . }}
+
+		<tr>
+
+			<td style="font-family: consolas;">{{.Id}}</td>
+			<td style="font-family: consolas;">{{.Chi}}</td>
+			<td style="font-family: consolas;">{{.Quando_g}}</td>
+			<td style="font-family: consolas;">{{.Quando_o}}</td>
+			<td style="font-family: consolas;">{{.Operazione}}</td>
+			<td style="font-family: consolas;">{{.Prev_id}}</td>
+			<td style="font-family: consolas;">{{.Remote}}</td>
+			<td style="font-family: consolas;">{{.Auto}}</td>
+	
+		</tr>
+            {{end}}
+	</tbody>
+	</table>
+    </div>
+
+
+</body>
+</html>
+<!-- diag.html -->

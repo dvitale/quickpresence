@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Avviso Timbrature Remote</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --card-bg: #2c3e50;
+            --body-bg: #1a1a1a;
+            --light-text: #ffffff;
+            --warning-bg: #f1c40f;
+            --warning-text: #2c3e50;
+        }
+
+        body {
+            background-color: var(--body-bg);
+            color: var(--light-text);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: system-ui, -apple-system, sans-serif;
+        }
+
+        .warning-container {
+            background: var(--warning-bg);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+            max-width: 800px;
+            text-align: center;
+            animation: pulse 2s infinite;
+        }
+
+        .warning-title {
+            color: var(--warning-text);
+            font-size: 1.8rem;
+            margin: 1rem 0;
+            line-height: 1.4;
+        }
+
+        .warning-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--warning-text);
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div class="warning-container">
+        <div class="warning-icon">⚠️</div>
+        <h2 class="warning-title">
+            Attenzione: Questo è l'entry point per le timbrature remote
+            <br><br>
+            Se sei in ufficio dovresti usare l'apposito dispositivo situato all'ingresso
+        </h2>
+    </div>
+</body>
+</html>

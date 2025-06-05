@@ -1,0 +1,502 @@
+<script> var filename="get_time.html";</script>
+
+<!DOCTYPE html>
+
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<title> Go QR Code Scanner </title>
+    <link rel="stylesheet" href="/statics/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<script src="/js/instascan.min.js"></script>
+   <style>
+    :root {
+      --primary-color: #3498db;
+      --card-bg: #2c3e50;
+      --body-bg: #1a1a1a;
+      --light-text: #ffffff;
+      --navbar-bg: #0d1620;
+      --table-header-bg: #2c3e50;
+      --input-bg: #34495e;
+      --input-border: #456789;
+      --highlight-bg: #f1c40f;
+      --highlight-text: #2c3e50;
+    }
+
+    body {
+      background-color: var(--body-bg) !important;
+      color: var(--light-text);
+    }
+
+    a {  
+      text-decoration: none; 
+      letter-spacing: 5px;
+      font-style: italic;
+      color: var(--primary-color);
+    }
+
+    .w3-panel {
+      background-color: var(--navbar-bg) !important;
+    }
+
+    .w3-text-amber {
+      color: var(--primary-color) !important;
+    }
+
+    .w3-text-black {
+      color: var(--light-text) !important;
+    }
+
+    .w3-btn {
+      color: var(--light-text) !important;
+      background-color: var(--primary-color) !important;
+    }
+
+    .w3-btn:hover {
+      background-color: #2980b9 !important;
+    }
+
+    /* Modal styling */
+    .w3-modal-content {
+      background-color: var(--card-bg) !important;
+      color: var(--light-text) !important;
+    }
+
+    .w3-container.w3-yellow {
+      background-color: var(--navbar-bg) !important;
+      color: var(--light-text) !important;
+    }
+
+    .w3-container.w3-teal {
+      background-color: var(--primary-color) !important;
+      color: var(--light-text) !important;
+    }
+
+    .w3-container.w3-white {
+      background-color: var(--card-bg) !important;
+      color: var(--light-text) !important;
+      border-color: var(--primary-color) !important;
+    }
+
+    .w3-input {
+      background-color: var(--input-bg) !important;
+      border-color: var(--input-border) !important;
+      color: var(--light-text) !important;
+    }
+        
+    .closeBtn {
+      display: block;
+      width: 30px;
+      height: 30px;
+      position: absolute;
+      top: -10px;
+      right: -10px;
+      background-image: url('/statics/images/closeBtn.png');
+      text-indent: -9999px;
+      cursor: pointer;
+      color: var(--light-text);
+    }
+
+    #preview {
+      outline-color: var(--primary-color) !important;
+    }
+   </style>
+
+</head>
+<body>
+<div class="w3-panel w3-round-xlarge">
+	  <img src="/statics/images/gopher.png" class="w3-image w3-left" style="width:50px;height:50px;">
+
+	  <a href="statics/doc/qp2_tfm.pdf"   class=" w3-text-amber w3-bar-item w3-btn w3-opacity w3-round w3-right" target="_blank">Read The (F) Manual</a>
+
+	<h2 class="w3-center"> US Rilevazione Presenze  -  
+
+	<!--	<a href="https://time.is/Italy" id="time_is_link" rel="nofollow" >Ora locale:</a> -->
+		<a href="https://time.is/Italy" id="time_is_link" onclick="f1(); return false;" class="w3-text-black">Orario</a>
+		<span id="Italy_z723" > </span>
+  </h2>
+</div> 
+<script src="//widget.time.is/t.js"></script>
+
+<script>time_is_widget.init({Italy_z723:{}});</script>
+
+<script type="text/javascript">
+////////// gestione dati timbrature
+
+	function f1() {
+		document.getElementById('time_is_link').href='';
+		if (lastChi=='') {
+			alert("Per vedere le tue timbrature riprova entro 20 secondi da una identificazione via QR code.");
+		} else {
+			location="/mylist?lastChi=" + lastChi;
+		}
+	}
+</script>
+
+
+<div class="w3-container w3-center " style=" padding:4px; margin:30px;">
+    <video id="preview" width="280px" height="210px" style="outline-style:inset; outline-width:6px; outline-color:#004d4d;"></video>
+</div>
+
+
+<div id="edit-form-item" class="w3-modal">
+	<div class="w3-modal-content w3-card-8 w3-animate-zoom" style="max-width: 42%; max-height: 70%">
+		<!-- head -->
+		<div class="w3-container w3-yellow w3-center">
+			<h4> <span id="yourstatus" span>  </h4>
+		<a class="closeBtn" href="#" onclick="document.getElementById('edit-form-item').style.display='none'">X</a>
+		 </div>
+
+		<form class="w3-container" action="" method="post" id="f1">
+		
+				<h3><span class="w3-center w3-col w3-teal" id="status" ></span></h3>
+<br>
+			<input readonly id="chi" class="w3-input w3-large w3-border" type="hidden" name="chi">
+				<input type="hidden" id="operazione" name="operazione">
+	
+	 <div class="w3-row-padding" style="margin:0 ">
+			
+			<div class="w3-half">
+			<p>
+				<div id="btn_in" class="w3-btn  " style="margin:0;padding:0" onclick="wsCall_senddata('IN');">
+				<p>
+				<img src="/statics/images/entrata.png" style="width:90%" >
+			<p>			
+			</div>
+			
+			</div>
+			
+			<div class="w3-half">
+			<p>
+				<div id="btn_out" class="w3-btn " style="margin:0;padding:0" onclick="wsCall_senddata('OUT');">
+			<p>
+				<img src="/statics/images/uscita.png" style="width:90%" >
+			<p>		
+				</div>
+			</div>
+	 </div>
+<br>
+			</form>
+		</div>
+	<h3>
+	<span class="w3-container w3-center w3-col w3-white w3-border w3-round-xxlarge" id="lastOp" style=" position: absolute; bottom: 0;" onclick="document.getElementById(activeBtn).click();" ></span>
+	</h3>
+
+</div>
+
+
+</body>
+
+<script type="text/javascript">
+/////////////////////// gestione dati NFC via SSE
+/*
+'use strict';
+
+  var source = new EventSource("/nfc_sse", { withCredentials: true });
+  source.onmessage = function(e) {
+	//console.log(e);
+	var chi =  e.data;
+	if (chi.length > 0) {activateFromNfc(chi);}
+  };
+  source.onerror = function(err) {
+	console.warn(err);
+  };
+  source.onclose = function(err) {
+	console.info("closed", err);
+  };
+  */
+</script>
+
+<script type="text/javascript">
+/////////////////////// gestione dati NFC via Ajax polling
+/*
+var  nfc_xmlhttp
+
+nfc_xmlhttp = new XMLHttpRequest();
+
+setTimeout( chknfc, 6000);	
+
+function chknfc() {
+	
+	var endpoint =  "/nfc";
+
+
+	setTimeout( chknfc, 6000);
+	console.log(chknfc);
+	
+
+	 nfc_xmlhttp.open('POST', endpoint, true);
+	 nfc_xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	
+	 nfc_xmlhttp.onreadystatechange = function () {
+		if ( nfc_xmlhttp.readyState == 4) {
+			if ( nfc_xmlhttp.status == 200) {
+			
+				//console.log("response: " +  nfc_xmlhttp.responseText);
+                let chi =  nfc_xmlhttp.responseText;
+				if (chi.length > 0) {activateFromNfc(chi);}
+			} else {
+				console.log('ajax call error - statusText: ' +  nfc_xmlhttp.statusText + ' - status: ' +  nfc_xmlhttp.status);
+			}
+		}
+	}
+	nfc_xmlhttp.send('');
+}
+*/
+
+function activateFromNfc(content) {
+
+	document.getElementById("chi").value=content;
+	document.getElementById('edit-form-item').style.display='block';
+	wsCall_checkdata();
+}
+
+</script>
+
+<script type="text/javascript">
+
+var activeBtn;
+var daySignature;
+
+document.body.onkeyup = function(e){
+    if(e.keyCode == 32){
+		document.getElementById(activeBtn).click();
+	} else {console.log(e.keyCode);}
+}	
+			
+      let scanner = new Instascan.Scanner({ video: document.getElementById('preview') });
+      scanner.addListener('scan', function (content) {  //QRcode riconosciuto
+        document.getElementById("chi").value=content.replaceAll(' ','');
+		document.getElementById('edit-form-item').style.display='block';
+		wsCall_checkdata();
+      });
+
+      Instascan.Camera.getCameras().then(function (cameras) {
+
+        if (cameras.length > 0) {
+          scanner.start(cameras[0]);
+        } else {
+          console.error('No cameras found.');
+        }
+
+      }).catch(function (e) {
+        console.error(e);
+      });
+
+
+ function wsCall_checkdata() {
+
+	var chi=document.getElementById("chi").value;
+
+	var xmlhttp
+    xmlhttp = new XMLHttpRequest();
+	var endpoint =  "/check_byqr";
+	
+	xmlhttp.open('POST', endpoint, true);
+	xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	
+	xmlhttp.onreadystatechange = function () {
+		if (xmlhttp.readyState == 4) {
+			if (xmlhttp.status == 200) {
+			
+				//console.log("response: " + xmlhttp.responseText);
+                x = xmlhttp.responseText;
+				daySignature = x;
+				let s = x.split("|");
+				let d = s[1].split("T");
+				let OP = s[2]=='IN'? "ENTRATA" : "USCITA";
+				document.getElementById("status").innerText = s[0];
+				document.getElementById("yourstatus").innerHTML = "Ultima operazione: il " + d[0] + "<h2>*" + OP + "* alle " + d[1] +"</h2>" ;
+				setOp();
+         
+			} else {
+			console.log('ajax call error - statusText: ' + xmlhttp.statusText + ' - status: ' + xmlhttp.status);
+			}
+		}
+	}
+	data2send='chi=' + chi;
+	console.log(data2send);
+	xmlhttp.send(data2send);
+}
+
+var lastChi='';
+
+function setOp() { // evidenzia l' operazione attesa 
+	
+	var statusline=daySignature.split("|");
+	
+	lastChi=statusline[0];
+	setTimeout(function() {
+			lastChi='';
+			daySignature='';
+		}, 22000);
+		
+	var btn_in=document.getElementById('btn_in');
+	var btn_out=document.getElementById('btn_out');
+
+	if ('OUT' == statusline[2]) { // operazione fuori sequenza = OUT
+		btn_in.style.backgroundColor ='green';
+		btn_in.classList.remove('w3-hover-pink');
+		btn_in.classList.add('w3-hover-lime');
+		
+		btn_out.style.backgroundColor ='red';
+		btn_out.classList.remove('w3-hover-lime');
+		btn_out.classList.add('w3-hover-pink');
+		
+		activeBtn='btn_in';
+	} else  {
+		btn_in.style.backgroundColor ='red';
+		btn_in.classList.remove('w3-hover-lime');
+		btn_in.classList.add('w3-hover-pink');
+		
+		btn_out.style.backgroundColor ='green';
+		btn_out.classList.remove('w3-hover-pink');
+		btn_out.classList.add('w3-hover-lime');
+		
+		activeBtn='btn_out';
+	}
+	
+	let msg = `Per accettare l'operazione prevista, quella <div class="w3-green"> VERDE </div> tap here`;
+	document.getElementById("lastOp").innerHTML= msg;
+	
+	setTimeout(function() { //hide bar
+			document.getElementById("lastOp").innerText='';
+		}, 12000);
+
+		setTimeout(function() { //hide form
+		document.getElementById('edit-form-item').style.display='none';
+	}, 20000);
+
+}
+
+var myIpByCli;
+var k="f0d1c41f329e030c9acd2c125a8ad1c00da8ff9c5e61488ef93bac38";
+
+async function getIpAddress() {
+    try {
+        const response = await fetch('https://api.ipdata.co?api-key='+k);
+        // oppure
+        // const response = await fetch('https://ipapi.co/json/');
+        const data = await response.json();
+        console.log('Il tuo IP è:', data.ip);
+		myIpByCli = data.ip;
+    } catch (error) {
+        console.error('Errore:', error);
+    }
+}
+getIpAddress();
+
+/*
+async function checkIpLocation() {
+    try {
+        const response = await fetch('https://api.ipify.org?format=json');
+        const data = await response.json();
+        console.log('Il tuo IP è:', data.ip);
+        
+        // Confronta con l'IP dell'ufficio
+        if (data.ip === '93.42.222.106') { // Il tuo IP dell'ufficio
+            // Logica per utenti dell'ufficio
+        }
+    } catch (error) {
+        console.error('Errore nel recupero IP:', error);
+    }
+}
+
+
+//fetch('https://api.ipify.org?format=json')
+fetch('https://api64.ipify.org/api/v2/json')
+    .then(response => response.json())
+    .then(data => {
+        myIpByCli = data.ip;
+		
+    })
+    .catch(error => {
+        console.log('Error getting Ip:'+ error);
+    })
+  console.log("myIpByCli: " + myIpByCli)  
+  
+*/  
+  
+  function wsCall_senddata(op) { 
+  
+	document.getElementById('edit-form-item').style.display='none';
+	
+	var xmlhttp
+    xmlhttp = new XMLHttpRequest();
+	var endpoint =  "/time_byqr";
+	
+	xmlhttp.open('POST', endpoint, true);
+	xmlhttp.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+	
+	xmlhttp.onreadystatechange = function () {
+		if (xmlhttp.readyState == 4) {
+			if (xmlhttp.status == 200) {
+			
+				//console.log("response: " + xmlhttp.responseText);
+                let res = xmlhttp.responseText;
+				document.getElementById("lastOp").innerHTML= "Operazione attuale:->   " + res;
+				setTimeout(function() {document.getElementById("lastOp").innerText='';}, 8000);
+         
+			} else {
+			console.log('ajax call error - statusText: ' + xmlhttp.statusText + ' - status: ' + xmlhttp.status);
+			}
+		}
+	}
+	
+	var chi=document.getElementById("chi").value;
+	//data2send='chi=' + chi + '&operazione=' + op;
+	data2send='chi=' + chi + '&operazione=' + op + '&myIpByCli=' + myIpByCli;
+	console.log(data2send);
+	xmlhttp.send(data2send);
+	
+	//sendCanvas('canvas','preview');
+}
+
+</script>
+
+<script type="text/javascript">
+    function postFile(file) {
+   
+		let formdata = new FormData();
+        formdata.append("uploadFile", file);
+        let xhr = new XMLHttpRequest();
+        xhr.open('POST', '/upload', true);
+        xhr.onload = function () {
+            if (this.status === 200)
+                console.log(this.response);
+            else
+                console.error(xhr);
+        };
+        xhr.send(formdata);
+    }
+
+    function sendCanvas(canvas, video) {
+	
+		let sourceCanvas = document.getElementById(canvas);
+		if (typeof(sourceCanvas) == 'undefined' || sourceCanvas == null) {
+		
+		  sourceCanvas = document.createElement(canvas);
+		  console.log(sourceCanvas);
+		}
+		
+		let v = document.getElementById(video);
+		let imageCtx = sourceCanvas.getContext("2d");
+		
+        sourceCanvas.width = v.videoWidth;
+        sourceCanvas.height = v.videoHeight;
+
+        imageCtx.drawImage(v, 0, 0, v.videoWidth, v.videoHeight);
+
+        sourceCanvas.toBlob(postFile, 'image/jpeg');
+    }
+	
+</script>	
+
+
+
+</html>
+<!-- get_time.html -->

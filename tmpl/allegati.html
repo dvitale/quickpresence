@@ -1,0 +1,199 @@
+<script> var filename="allegati.html";</script>
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+    <link rel="stylesheet" href="/statics/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<style>
+#fileBtn {
+  font-family: calibri;
+  width: 250px;
+  padding: 3px;
+  -webkit-border-radius: 5px;
+  -moz-border-radius: 5px;
+  border: 2px  #777;
+  text-align: center;
+  background-color: #eee;
+  cursor: pointer;
+}
+
+a {  
+	text-decoration:none; 
+	letter-spacing:5px;
+	font-style:italic;
+}
+
+.closeBtn {
+	display: block;
+	width: 30px;
+	height: 30px;
+	position: absolute;
+	top: -10px;
+	right: -10px;
+	background-image: url('/statics/images/closeBtn.png');
+	text-indent: -9999px;
+	cursor: pointer;
+}
+
+</style>
+</head>
+<body>
+<div class="w3-bar w3-teal" style="position:sticky; top:0">
+  <a href="/get_time" class="w3-bar-item w3-button" target="_parent">Back</a>
+
+	<div class="w3-display-middle ">
+		<h4>Chi: {{.Chi}}  -- Gestione allegati alle timbrature</h4>
+	
+	</div>	
+</div>
+<div class="w3-container">
+<iframe name="iframe_allegati" id="iframe_allegati" src="/lista_allegati?chi={{.Chi}}" 
+        frameborder="0" border="0" cellspacing="0"
+        style="border-style: none;width: 100%; height: 500px;"></iframe>
+</div>		
+<div class="w3-container w3-center" style=" padding:5px; margin:10px;">
+<button style="background-color:#fbfafa;" class="w3-block w3-padding w3-round" onclick="document.getElementById('edit-form').style.display='block';">Aggiungi Allegati</button>
+</div>
+
+<!--- MODAL START -->
+<div id="edit-form" class="w3-modal w3 center " >
+
+<div class="w3-modal-content w3-round-xlarge" style="background-color:#fbfafa ; max-width: 75%; max-height:50%;  padding:10px; border-style: groove;" >
+
+<a class="closeBtn" href="#" onclick="document.getElementById('edit-form').style.display='none'">X</a>
+<form action="/salva_allegato" method="post" enctype="multipart/mixed" id="form-id">
+<table><tr>
+<td align="right"><label>Descrizione: </label></td><td><input type="text" name='dsc' id="dsc" size="70" /></td>
+</tr><tr>
+<td align="right"><label>Giorno di riferimento: </label></td><td><input required id="quando_g" name="quando_g" type="date"></td>
+</tr><tr>
+<td ><input type="hidden" name="chi" value="{{.Chi}}"></td><td><div style='height:0px; width:0px; overflow:hidden;'><input type="file" id="upfile" onchange="sub(this)" name="uploadFile" /></div></td>  
+</tr><tr>
+<td><div id="fileBtn" onclick="getFile()">File da allegare</div> </td><td> <input class="w3-round" type="submit" value="Invia allegato" /></td>
+</tr></table>
+</form>
+
+  <!-- Placeholders for messages set by event handlers -->
+  <p id="upload-status"></p>
+  <p id="progress"></p>
+  <pre id="result"></pre>
+  </div>
+</div>
+<!--- MODAL END -->
+  <script>
+function getFile() {
+  document.getElementById("upfile").click();
+}
+
+function sub(obj) {
+  var file = obj.value;
+  var fileName = file.split("\\");
+   console.log("fileName:" + fileName);
+  console.log("file:" + file);
+  
+  document.getElementById("fileBtn").innerHTML = fileName[fileName.length - 1];
+ }
+  
+  // Init the Ajax form submission
+  var form = document.getElementById('form-id');
+  form.onsubmit = function() {
+   
+    var formData = new FormData(form);  // FormData receives the whole form fields data
+
+    var action = form.getAttribute('action');
+
+	if(document.getElementById("upfile").value == "") {
+		alert("Per aggiungere un allegato è necessario selezionare un file...");
+		return false;
+	}
+	for (var value of formData.values()) {
+		console.log(value); 
+	}
+    // Code common to both variants
+    sendXHRequest(formData, action);
+
+    // Avoid normal form submission
+    return false;
+  }
+
+
+function sendXHRequest(formData, uri) {
+  // Get an XMLHttpRequest instance
+   
+  var xhr = new XMLHttpRequest();
+
+  // Set up events
+  xhr.upload.addEventListener('loadstart', onloadstartHandler, false);
+  xhr.upload.addEventListener('progress', onprogressHandler, false);
+  xhr.upload.addEventListener('load', onloadHandler, false);
+  xhr.addEventListener('readystatechange', onreadystatechangeHandler, false);
+
+  // Set up request
+  xhr.open('POST', uri, true);
+
+  // Fire!
+  xhr.send(formData);
+}
+
+// Handle the start of the transmission
+function onloadstartHandler(evt) {
+  var div = document.getElementById('upload-status');
+  div.innerHTML = 'Upload started.';
+}
+
+// Handle the end of the transmission
+function onloadHandler(evt) {
+  var div = document.getElementById('upload-status');
+  div.innerHTML += '<' + 'br>File uploaded. Waiting for response.';
+}
+
+// Handle the progress
+function onprogressHandler(evt) {
+  var div = document.getElementById('progress');
+  var percent = evt.loaded/evt.total*100;
+  div.innerHTML = 'Progress: ' + percent.toFixed(2) + '%';
+}
+
+// Handle the response from the server
+function onreadystatechangeHandler(evt) {
+  var status, text, readyState;
+
+  try {
+    readyState = evt.target.readyState;
+    text = evt.target.responseText;
+    status = evt.target.status;
+	document.getElementById('iframe_allegati').src = document.getElementById('iframe_allegati').src;
+  }
+  catch(e) {
+    return;
+  }
+
+  if (readyState == 4 && status == '200' && evt.target.responseText) {
+    var status = document.getElementById('upload-status');
+    status.innerHTML += '... Completed';
+
+    var result = document.getElementById('result');
+    result.innerHTML = 'The server saw it as:' + evt.target.responseText ;
+	setTimeout(function() {
+		document.getElementById('upload-status').innerHTML = '';
+		document.getElementById('progress').innerHTML = '';
+		document.getElementById('result').innerHTML = '';
+		document.getElementById('fileBtn').innerHTML = 'File da allegare';
+		document.getElementById('quando_g').value = '';
+		document.getElementById('dsc').value = '';
+		document.getElementById('upfile').value = '';
+		//document.getElementById('edit-form').style.display='none';
+	
+	}, 3000);
+	
+  }
+}
+  </script>
+
+
+</body>
+</html>

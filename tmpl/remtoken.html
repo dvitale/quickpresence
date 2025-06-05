@@ -1,0 +1,46 @@
+<script> var filename="remtoken.html";</script>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=0.9">
+    <link rel="stylesheet" href="/statics/ionicons/css/w3.css">
+	<link rel="stylesheet" href="https://www.w3schools.com/lib/w3-theme-amber.css">
+    <link rel="stylesheet" href="/statics/ionicons/css/ionicons.min.css">
+    <title>Accessing the US HR system</title>
+    <style>
+        #login-form {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<!-- remote Login form -->
+<div id="login-form" class="w3-modal ">
+    <div class="w3-modal-content w3-card-8 w3-animate-zoom w3-theme-l3" style="max-width:400px">
+	<div class="w3-panel w3-theme-l1 "><h3 class="w3-center">Timbratura virtuale - step 2</h3></div>
+        <div class="w3-center w3-border"><br>
+
+            <img src="/statics/images/login_avatar.png" alt="gopher" style="width:20%" class="w3-circle w3-margin-top">
+        </div>
+
+        <form class="w3-container" action="/remtoken" method="post">
+            <div class="w3-section">
+<p> Inserisci il token ricevuto via email </p><p>- Entro 3 min</p> <p>- Se necessario verifica in posta indesiderata</p>
+                <input class="w3-input w3-border w3-light-grey" type="text" placeholder="token" name="token" required>
+				<input type="hidden" name="op" id="op">
+				<input type="hidden" name="chi" value={{.Nome}}>
+                <button class="w3-btn-block w3-section w3-padding w3-theme" type="submit">Rilevazione presenze via QR</button>
+                <button class="w3-btn-block w3-section w3-padding w3-theme" type="submit" onclick="document.getElementById('op').value='IN';">Inizio attività</button>
+                <button class="w3-btn-block w3-section w3-padding w3-theme" type="submit" onclick="document.getElementById('op').value='OUT';">Fine   attività</button>
+            </div>
+        </form>
+
+
+    </div>
+</div>
+</body>
+</html>
+<!-- remtoken.html -->

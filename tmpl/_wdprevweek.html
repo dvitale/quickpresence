@@ -1,0 +1,40 @@
+<html>
+<head>
+<style>
+table, td, th {
+  border: 1px solid #ddd;
+  border-collapse: collapse;
+  font-family: monospace;
+  padding: 10px;
+}
+
+th {
+  background-color: #46C6C6;
+  color: #800000;
+}
+</style>
+</head>
+<body>
+<br>
+<div align="center">
+<table >
+<tr><th colspan="4" style="color: white;"> Consuntivi presenze settimana precedente</th></tr>
+<tr>
+	<th>Chi</th>
+	<th>Giorno</th>
+	<th>Ore</th>
+	<th>Note</th>
+</tr> 
+{{range.}}
+<tr>
+	<td>{{.Chi}}</td>
+	<td>{{.Quando_g}}</td>
+	<td>{{.Htot}}</td>
+	<td>{{.Note}}&nbsp;</td>
+</tr>
+{{end}}
+</table>
+
+</div>
+</body>
+</html>

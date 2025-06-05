@@ -1,0 +1,93 @@
+<script> var filename="lista_allegati.html";</script>
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+   
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	<link rel="stylesheet" href="/statics/css/purePopup.css">
+	
+	<title>HR Presence</title>
+
+<style>
+.mylink:link, .mylink:visited {
+  background-color: #fbfafa;
+  color: #927777;
+  padding: 4px 12px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.mylink:hover, .mylink:active {
+  background-color: #ddd;
+}
+</style>
+</head>
+<body>
+
+
+	<table id="mainTable" class="w3-table w3-bordered w3-border ">
+		<thead>
+		<tr class="w3-light-grey">					
+			<th>Descrizione</th>
+			<th>Data riferimento</th>
+			<th>File</th>
+			<th>Inserito il</th>
+			<th>Elimina</th>
+			
+						
+		</tr>
+		</thead>
+		
+		<tbody>
+		 {{range .Allegati }}
+
+		<tr class='w3-light-grey' >
+
+			<td style="font-family: consolas;">{{.Dsc}}</td>
+			<td style="font-family: consolas;">{{.Quando_g}}</td>
+			<td style="font-family: consolas;"><a class="mylink" href="/statics/allegatifiles/{{.Filename}}">{{.Filename}}</a></td>
+			<td style="font-family: consolas;">{{.Data_ins}}</td>
+			<td style="font-family: consolas;"><a class="mylink" href="#" onclick="rimuovi_Allegato( {{.Id}}, {{.Chi}}, {{.Filename}});">X</a></td>
+	
+		</tr>
+            {{end}}
+	</tbody>
+	</table>
+    </div>
+</div>
+
+
+</body>
+</html>
+<script src="js/purePopup.js"> </script>   
+<script>
+'use strict';
+function rimuovi_Allegato(id, chi, filename) {
+console.log(id);
+	PurePopup.confirm({
+		title: "Confermi l'eliminazione dell'allegato " + filename + "?",
+		buttons: {
+			yes: 'SI, confermo',
+			no:  'NO'
+		},
+	}, function(result) {
+
+		if (result.confirm == 'yes') {
+			//-------- qua parte la gestione della conferma
+			location="/rimuovi_allegato?id="+ id + "&chi=" + chi;
+
+		} else if (result.confirm == 'no') {
+
+			//PurePopup.alert({title: 'Ok'});			
+		}
+	});
+
+}
+</script>
+<!-- lista_allegati.html -->

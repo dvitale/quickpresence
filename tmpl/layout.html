@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="it" data-bs-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestione Ferie</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://unpkg.com/htmx.org@1.9.0"></script>
+    <style>
+    :root {
+        --primary-color: #2583cc;
+        --secondary-color: #4CAF50;
+        --accent-color: #cddc39;
+        --dark-bg: #1e2a38;
+        --card-bg: #2c3034;
+        --light-text: #e9ecef;
+        --hover-color: rgba(37, 131, 204, 0.1);
+    }
+    
+    .bg-dark-1 {
+        background-color: #444 !important;
+    }
+    .bg-dark-2 {
+        background-color: #222 !important;
+    }
+    
+    body {
+        background-color: var(--dark-bg);
+        color: var(--light-text);
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    .table {
+        --bs-table-bg: var(--card-bg);
+        --bs-table-color: var(--light-text);
+        --bs-table-border-color: var(--primary-color);
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    
+    .table th {
+        background-color: rgba(37, 131, 204, 0.2);
+        font-weight: 600;
+    }
+    
+    .table td, .table th {
+        padding: 12px;
+        vertical-align: middle;
+    }
+    
+    .card {
+        background-color: var(--card-bg);
+        border-color: rgba(55, 59, 62, 0.5);
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        transition: transform 0.2s, box-shadow 0.2s;
+    }
+    
+    .card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .card-title {
+        color: var(--primary-color);
+        font-weight: 600;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        padding-bottom: 10px;
+        margin-bottom: 15px;
+    }
+    
+    .navbar {
+        background-color: #121e2a !important;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        padding: 12px 0;
+    }
+    
+    .navbar-brand {
+        font-weight: 600;
+        letter-spacing: 0.5px;
+        color: var(--primary-color) !important;
+    }
+    
+    .calendar-container {
+        background-color: var(--card-bg);
+        padding: 25px;
+        border-radius: 12px;
+        border: 1px solid rgba(55, 59, 62, 0.5);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+    
+    .btn {
+        border-radius: 6px;
+        padding: 8px 16px;
+        font-weight: 500;
+        transition: all 0.2s;
+    }
+    
+    .btn-primary {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    
+    .btn-primary:hover {
+        background-color: #1c6fad;
+        border-color: #1c6fad;
+    }
+    
+    .btn-secondary {
+        background-color: #495057;
+        border-color: #495057;
+    }
+    
+    .btn-secondary:hover {
+        background-color: #3d4347;
+        border-color: #3d4347;
+    }
+    
+    .form-control {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: rgba(255, 255, 255, 0.1);
+        color: var(--light-text);
+        border-radius: 6px;
+        padding: 10px 15px;
+    }
+    
+    .form-control:focus {
+        background-color: rgba(255, 255, 255, 0.1);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 0.25rem rgba(37, 131, 204, 0.25);
+        color: white;
+    }
+    
+    .form-label {
+        font-weight: 500;
+        margin-bottom: 8px;
+        color: rgba(255, 255, 255, 0.8);
+    }
+    
+    /* Indicators */
+    .ferie-indicator {
+        background-color: var(--primary-color);
+        height: 6px;
+        border-radius: 3px;
+        margin-top: 4px;
+    }
+    
+    .uswork-indicator {
+        background-color: var(--secondary-color);
+        height: 6px;
+        margin-top: 4px;
+        border-radius: 3px;
+    }
+    
+    .smwork-indicator {
+        background-color: var(--accent-color);
+        height: 6px;
+        margin-top: 4px;
+        border-radius: 3px;
+    }
+    
+    /* Responsive adjustments */
+    @media (max-width: 768px) {
+        .calendar-container {
+            padding: 15px;
+        }
+        
+        .table td, .table th {
+            padding: 8px;
+        }
+    }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <span class="navbar-brand"><i class="fas fa-calendar-alt me-2"></i>Gestione Ferie</span>
+        </div>
+    </nav>
+
+    <div id="content" class="container mt-4">
+        {{ template "content" . }}
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html> 

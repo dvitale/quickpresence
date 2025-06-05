@@ -1,0 +1,19 @@
+
+
+[Unit]
+Description=qp2 script
+
+[Service]
+WorkingDirectory=/root/go_projects/src/risorse-telelav
+
+
+Environment="GOROOT=/usr/local/go"
+Environment="GOPATH=$HOME/go_projects"
+Environment="GOBIN=$GOPATH/bin"
+Environment="PATH=$PATH:$GOROOT/bin:$GOBIN"
+
+ExecStart=/root/go_projects/src/risorse-telelav/qp2.sh
+
+[Install]
+WantedBy=multi-user.target
+

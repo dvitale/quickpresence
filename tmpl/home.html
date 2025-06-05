@@ -1,0 +1,308 @@
+<script> var filename="home.html";</script>
+
+
+
+<!DOCTYPE html>
+<html lang="it">
+
+
+<style>
+:root {
+  --primary-color: #3498db;
+  --card-bg: #2c3e50;
+  --body-bg: #1a1a1a;
+  --light-text: #ffffff;
+  --navbar-bg: #0d1620;
+}
+
+body {
+  background-color: var(--body-bg);
+  color: var(--light-text);
+}
+
+.btn-transp {
+  background-color: transparent;
+  border-color: #777;
+}
+
+.dashboard-container {
+  max-width: 1000px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.action-card {
+  background-color: var(--card-bg);
+  border-radius: 10px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.action-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}
+
+.action-card h5 {
+  color: var(--primary-color);
+  margin-bottom: 15px;
+  font-weight: 600;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 10px;
+}
+
+.form-group {
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background-color: var(--card-bg);
+  color: var(--light-text);
+}
+
+select.form-control {
+  background-image: linear-gradient(45deg, transparent 50%, var(--light-text) 50%),
+                    linear-gradient(135deg, var(--light-text) 50%, transparent 50%);
+  background-position: calc(100% - 20px) calc(1em + 2px),
+                      calc(100% - 15px) calc(1em + 2px);
+  background-size: 5px 5px,
+                  5px 5px;
+  background-repeat: no-repeat;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+}
+
+select.form-control option {
+  background-color: var(--card-bg);
+  color: var(--light-text);
+}
+
+.form-control:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(37, 131, 204, 0.25);
+}
+
+.btn-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.action-btn {
+  padding: 10px 15px;
+  border-radius: 6px;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  flex: 1;
+  min-width: 150px;
+  text-align: center;
+  font-weight: 500;
+  text-decoration: none;
+}
+
+.action-btn:hover {
+  background-color: #1c6fad;
+}
+
+.action-btn.secondary {
+  background-color: #495057;
+}
+
+.action-btn.secondary:hover {
+  background-color: #3d4347;
+}
+
+.navbar-custom {
+  background-color: var(--navbar-bg);
+  padding: 15px 0;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.navbar-title {
+  color: white;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
+.navbar-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 10px;
+  }
+  
+  .btn-row {
+    flex-direction: column;
+  }
+  
+  .action-btn {
+    width: 100%;
+  }
+}
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/statics/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="navbar-custom">
+  <div class="container">
+    <div class="navbar-actions">
+      <div>
+        <a href="#" onclick="/*location='/covid'*/alert('function not enabled');" class="action-btn secondary">
+          <i class="fas fa-id-card me-2"></i>Green Pass
+        </a>
+        <a href="#" onclick="location='/list_pres'" class="action-btn secondary">
+          <i class="fas fa-clipboard-list me-2"></i>Lista Presenze
+        </a>
+      </div>
+      <h4 class="navbar-title"><i class="fas fa-home me-2"></i>HR Home</h4>
+      <div>
+        <a href="#" onclick="location='/get_time_sec'" class="action-btn">
+          <i class="fas fa-qrcode me-2"></i>QR Reader
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="dashboard-container">            
+  <div class="action-card">
+    <h5><i class="fas fa-calendar-check me-2"></i>Gestione Presenze</h5>
+    <form id='f1' method="post">   
+      <div class="row">
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="quando_g">Giornata di interesse</label>  
+            <input required class="form-control" id="quando_g" name="quando_g" type="date">
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="form-group">
+            <label for="ris">Risorsa</label>  
+            <select class="form-control" name="ris" id="ris">
+              <option value=""> Tutti </option>
+              {{range . }}
+              <option value="{{.Nome}}" title="{{.Id}}">{{.Nome}}</option>
+              {{end}}
+            </select>
+          </div>
+        </div>
+      </div>
+      
+      <div class="btn-row">
+        <button onclick="document.getElementById('f1').action='/wt';" class="action-btn" type="submit">
+          <i class="fas fa-clock me-2"></i>Ore Lavorate
+        </button>
+        <button onclick="setMonth();document.getElementById('f1').action='/wtfm2';" class="action-btn" type="submit">
+          <i class="fas fa-calendar-week me-2"></i>Mese Completo
+        </button>
+        <button onclick="document.getElementById('f1').action='/list_daytime';" class="action-btn" type="submit">
+          <i class="fas fa-edit me-2"></i>Modifica Dettagli
+        </button>
+      </div>
+      
+      <div class="btn-row mt-3">
+        <a href="#" onclick="calendario()" class="action-btn secondary">
+          <i class="fas fa-calendar-alt me-2"></i>Gestione Ferie
+        </a>
+        <button onclick="document.getElementById('f1').action='/wdcal';" class="action-btn secondary" type="submit">
+          <i class="fas fa-calendar-day me-2"></i>Calendario Giorni Lavorativi
+        </button>
+        <a href="#" onclick="elenco_ferie()" class="action-btn secondary">
+          <i class="fas fa-list me-2"></i>Elenco Ferie
+        </a>
+      </div>
+    </form>
+  </div>
+</div>
+	 <!--
+	 <div class="w3-container w3-center w3-cell-middle">
+<br>
+    <p>logbook:</p>
+  <img src="/statics/images/logbook.png" class="w3-round-small" alt="logbook" style="width:15%">
+
+  </div>
+-->
+</body>
+
+<script>
+function calendario() {
+
+var dipendente=document.getElementById("ris").value;
+
+if (dipendente=="") {
+	alert ("Selezionare un dipendente");
+	return false;
+}
+var quando_g=document.getElementById('quando_g').value;
+
+var mese=quando_g.substring(0,7);
+
+location='/calendario?dipendente=' + dipendente + "&mese=" + mese;
+
+}
+
+function elenco_ferie() {
+
+var quando_g=document.getElementById('quando_g').value;
+
+var mese=quando_g.substring(0,7);
+
+location='/elenco-ferie?mese=' + mese;
+
+}
+
+function setMonth() {
+	
+	document.getElementById('quando_g').type='text';
+	let d = document.getElementById('quando_g').value;
+	let dm = d.substring(0,7) ;
+	document.getElementById('quando_g').value = dm +'%';
+	console.log(dm);
+	document.getElementById('f1').action='/wt';
+}
+
+ window.addEventListener("load", function(){
+
+	var today = new Date();
+	var dd = String(today.getDate()).padStart(2, '0');
+	var mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
+	var yyyy = today.getFullYear();
+
+	var todaystr = yyyy + "-" + mm + "-" + dd;
+	document.getElementById('quando_g').value=todaystr;
+});
+</script>
+
+</html>
+<!-- home.html -->

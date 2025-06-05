@@ -1,0 +1,230 @@
+<script> var filename="list_daytime.html";</script>
+
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+    <link rel="stylesheet" href="/statics/ionicons/css/ionicons.min.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+	
+	<title>Elenco timbrature </title>
+
+    <style>
+:root {
+  --primary-color: #3498db;
+  --card-bg: #2c3e50;
+  --body-bg: #1a1a1a;
+  --light-text: #ffffff;
+  --navbar-bg: #0d1620;
+  --table-header-bg: #2c3e50;
+  --input-bg: #34495e;
+  --input-border: #456789;
+  --highlight-bg: #f1c40f;
+  --highlight-text: #2c3e50;
+}
+
+body {
+  background-color: var(--body-bg);
+  color: var(--light-text);
+}
+
+a { 
+  text-decoration: none;
+  color: var(--primary-color);
+}
+
+.w3-bar {
+  background-color: var(--navbar-bg) !important;
+}
+
+.w3-table {
+  color: var(--light-text);
+  background-color: var(--card-bg);
+}
+
+tr {
+  background-color: var(--card-bg);
+}
+
+.w3-light-grey {
+  background-color: var(--table-header-bg) !important;
+  color: var(--light-text) !important;
+}
+
+.w3-btn, .w3-button {
+  color: var(--light-text) !important;
+  background-color: var(--primary-color) !important;
+}
+
+.w3-btn:hover, .w3-button:hover {
+  background-color: #2980b9 !important;
+}
+
+/* Modal styling */
+.w3-modal-content {
+  background-color: var(--card-bg) !important;
+  color: var(--light-text) !important;
+}
+
+.w3-container.w3-teal {
+  background-color: var(--navbar-bg) !important;
+}
+
+.w3-input {
+  background-color: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
+  color: var(--light-text) !important;
+}
+
+.w3-input.w3-yellow {
+  background-color: var(--highlight-bg) !important;
+  color: var(--highlight-text) !important;
+  font-weight: bold;
+}
+
+.w3-text-blue {
+  color: var(--primary-color) !important;
+}
+
+textarea.w3-input {
+  background-color: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
+  color: var(--light-text) !important;
+}
+
+textarea.w3-yellow {
+  background-color: var(--highlight-bg) !important;
+  color: var(--highlight-text) !important;
+}
+
+.w3-input.w3-light-grey {
+  background-color: var(--input-bg) !important;
+  border-color: var(--input-border) !important;
+  color: var(--light-text) !important;
+}
+
+	.closeBtn {
+		display: block;
+		width: 30px;
+		height: 30px;
+		position: absolute;
+		top: -10px;
+		right: -10px;
+		background-image: url('/statics/images/closeBtn.png');
+		text-indent: -9999px;
+		cursor: pointer;
+	}
+	</style>
+    
+
+	<script type="text/javascript" src="/js/FileSaver.js"></script>
+    <script type="text/javascript" src="/js/xlsx.full.min.js"></script>
+    <script type="text/javascript" src="/js/tableexport.js"></script>
+</head>
+<body>
+
+<div class="w3-bar" style="position:sticky; top:0">
+ <a href="#" onclick="location='/home'" class="w3-border w3-bar-item w3-btn w3-round-large w3-right" >GO Home</a>
+  <a href="#" onclick="location='/get_time'" class="w3-bar-item w3-button">Back</a>
+
+	<div class="w3-half">
+		<h4 class="w3-right">HR Data</h4>
+
+	</div>	
+</div>
+
+	<table id="mainTable" class="w3-table w3-bordered w3-border w3-centered w3-tiny">
+		<thead>
+		<tr class="w3-light-grey">			
+			<th>#Rec</th>
+			<th>Giorno</th>
+			<th>Orario</th>
+			<th>Tipo operazione</th>
+			<th>Chi</th>
+			<th>Auto</th>
+			<th>Nota</th>
+		</tr>
+		</thead>
+		<tbody>
+		 {{range .Worktimes }}
+
+		<tr>
+			<td  style="font-family: consolas;">{{.Id}}</td>
+			<td  style="font-family: consolas;" class="tableexport-string target">{{.Quando_g}}</td>
+			<td style="font-family: consolas;">{{.Quando_o}} &nbsp; <a href="#" onclick="updateItem(this);"> <img src="/statics/ionicons/png/512/edit.png" width="14" height="16" ></a></td>
+			<td style="font-family: consolas;">{{.Operazione}} </td>
+			<td style="font-family: consolas;">{{.Chi}}</td>
+			<td style="font-family: consolas;">{{.Auto}}</td>
+			<td style="font-family: consolas;">{{.Nota}}</td>
+	</tr>
+            {{end}}
+	</tbody>
+	</table>
+
+	<!-- Edit Item -->
+<div id="edit-form-item" class="w3-modal">
+	<div class="w3-modal-content w3-card-8 w3-animate-zoom" style="max-width: 45%;">
+		<!-- head -->
+		<div class="w3-container w3-dark">
+			<h4>Modifica Orario di lavoro</h4>
+			<a class="closeBtn" href="#" onclick="document.getElementById('edit-form-item').style.display='none'" style="color: var(--light-text);">X</a>
+		 </div>
+
+		<form class="w3-container" action="/update_time" method="post">
+			<label class="w3-label  w3-text-blue w3-small">Chi</label> 
+			<input readonly id="ris" class="w3-input w3-tiny w3-border w3-light-grey" type="text" name="ris">
+			
+			<label class="w3-label  w3-text-blue w3-small">Giorno</label> 
+			<input readonly id="quando_g" class="w3-input w3-tiny w3-border w3-light-grey" type="text" name="quando_g">
+							
+			<label class="w3-text-blue w3-label w3-small">Operazione</label> 
+			<input readonly id="operazione" class="w3-input w3-tiny w3-border w3-light-grey" type="text" name="operazione" >
+
+			<label class="w3-text-blue w3-label w3-small">ATTUALE Orario</label> 
+			<input readonly id="quando_o_old" class="w3-input w3-tiny w3-border w3-light-grey" type="text" name="quando_o_old" >
+			
+			<label class="w3-text-blue w3-label-w3-small">NUOVO Orario</label> 
+			<input required id="quando_o" class="w3-input w3-tiny w3-border w3-yellow" type="text" name="quando_o" pattern="([0-1]{1}[0-9]{1}|20|21|22|23):[0-5]{1}[0-9]{1}" >
+			<label class="w3-text-blue w3-label-w3-small">Motivo della modifica</label> 
+			<textarea required name="note" class="w3-input w3-border w3-tiny w3-yellow" style="resize:none"></textarea>
+			<input type=hidden id="id" name="id">
+			<button class="w3-btn w3-teal w3-padding-small  w3-small w3-round  w3-margin-top w3-margin-bottom w3-right" type="submit">Save</button>
+
+		</form>
+	</div>
+</div>
+
+
+<script>
+function updateItem(e, op) {
+
+	document.getElementById('id').value=e.parentNode.parentNode.childNodes[1].innerText;
+	document.getElementById('quando_g').value=e.parentNode.parentNode.childNodes[3].innerText;
+	document.getElementById('quando_o_old').value= e.parentNode.parentNode.childNodes[5].innerText;
+	document.getElementById('operazione').value=e.parentNode.parentNode.childNodes[7].innerText;
+	document.getElementById('ris').value=e.parentNode.parentNode.childNodes[9].innerText;
+
+	document.getElementById('edit-form-item').style.display='block';
+}
+</script>
+<script>
+      //  TableExport(document.getElementById("usrtable"));
+TableExport(document.getElementById("mainTable"), {
+    headers: true,                              // (Boolean), display table headers (th or td elements) in the <thead>, (default: true)
+    footers: false,                              // (Boolean), display table footers (th or td elements) in the <tfoot>, (default: false)
+    formats: ['xls', 'csv', 'txt'],             // (String[]), filetype(s) for the export, (default: ['xls', 'csv', 'txt'])
+    filename: 'exported',                             // (id, String), filename for the downloaded file, (default: 'id')
+    bootstrap: true,                           // (Boolean), style buttons using bootstrap, (default: true)
+    exportButtons: true,                        // (Boolean), automatically generate the built-in export buttons for each of the specified formats (default: true)
+    position: 'top',                         // (top, bottom), position of the caption element relative to table, (default: 'bottom')
+    ignoreRows: null,                           // (Number, Number[]), row indices to exclude from the exported file(s) (default: null)
+    ignoreCols: null,                           // (Number, Number[]), column indices to exclude from the exported file(s) (default: null)
+    trimWhitespace: true                        // (Boolean), remove all leading/trailing newlines, spaces, and tabs from cell text in the exported file(s) (default: false)
+})
+</script>
+
+</body>
+</html>
+<!-- list_daytime.html -->

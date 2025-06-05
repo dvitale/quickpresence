@@ -1,0 +1,191 @@
+{{ define "content" }}
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <a href="#" onclick="location='/home'" class="btn btn-secondary">
+            <i class="fas fa-home me-2"></i>Home
+        </a>
+        <h2 class="text-center mb-0">{{ .Title }}</h2>
+        <div style="width: 100px;"></div> <!-- Spacer for alignment -->
+    </div>
+
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0"><i class="fas fa-calendar-alt me-2"></i>{{ .Mese }}</h4>
+                    
+                    <div class="d-flex align-items-center">
+                        <a class="btn btn-primary btn-sm me-2" href="#" onclick="exportTableToCSV('ferie.csv');">
+                            <i class="fas fa-download me-1"></i>Download CSV
+                        </a>
+                        
+                        <div class="btn-group">
+                            <a class="btn btn-secondary btn-sm" 
+                               href="#" onclick="const d = getAdjacentMonths('{{ .Mese }}'); location='/elenco-ferie?mese='+d.prev">
+                                <i class="fas fa-chevron-left me-1"></i>Mese Precedente
+                            </a>
+                            <a class="btn btn-secondary btn-sm" 
+                               href="#" onclick="const d = getAdjacentMonths('{{ .Mese }}'); location='/elenco-ferie?mese='+d.next">
+                                Mese Successivo<i class="fas fa-chevron-right ms-1"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table id="elenco_ferie" class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th><i class="fas fa-calendar-day me-2"></i>Data</th>
+                                    <th><i class="fas fa-user me-2"></i>Dipendente</th>
+                                    <th><i class="fas fa-sticky-note me-2"></i>Note</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {{ $currentDate := "" }}
+                                {{ $rowClass := "even-row" }}
+                                {{ range .Ferie }}
+                                    {{ if ne $currentDate .Data }}
+                                        {{ if eq $rowClass "even-row" }}
+                                            {{ $rowClass = "odd-row" }}
+                                        {{ else }}
+                                            {{ $rowClass = "even-row" }}
+                                        {{ end }}
+                                        {{ $currentDate = .Data }}
+                                    {{ end }}
+                                    <tr class="{{ $rowClass }}">
+                                        <td>{{ .Data }}</td>
+                                        <td>{{ .Dipendente }}</td>
+                                        <td>{{ .Note }}</td>
+                                    </tr>
+                                {{ end }}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+.card-header {
+    background-color: rgba(37, 131, 204, 0.2) !important;
+    border-bottom: 1px solid rgba(37, 131, 204, 0.3);
+}
+
+.table {
+    border-collapse: separate;
+    border-spacing: 0;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.table thead th {
+    background-color: rgba(37, 131, 204, 0.2);
+    color: var(--light-text);
+    font-weight: 600;
+    border-bottom: 2px solid rgba(37, 131, 204, 0.5);
+    padding: 12px 15px;
+}
+
+.table tbody td {
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.even-row {
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+.odd-row {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.table tr:hover td {
+    background-color: rgba(37, 131, 204, 0.1);
+}
+
+.btn-group {
+    display: flex;
+}
+
+@media (max-width: 768px) {
+    .card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .card-header h4 {
+        margin-bottom: 10px;
+    }
+    
+    .d-flex.align-items-center {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+    }
+    
+    .btn-group {
+        margin-top: 10px;
+        width: 100%;
+    }
+    
+    .btn-group .btn {
+        flex: 1;
+    }
+    
+    .btn-primary {
+        width: 100%;
+        margin-bottom: 10px;
+        margin-right: 0 !important;
+    }
+}
+</style>
+
+<script>
+function exportTableToCSV(filename) {
+    const csv = [];
+    const rows = document.querySelectorAll("table tr");
+    
+    for (let i = 0; i < rows.length; i++) {
+        const row = [], cols = rows[i].querySelectorAll("td, th");
+        
+        for (let j = 0; j < cols.length; j++) {
+            // Remove icons from header cells for CSV export
+            const text = cols[j].innerText.replace(/^\s*[\r\n]/gm, '').trim();
+            row.push('"' + text.replace(/"/g, '""') + '"');
+        }
+        
+        csv.push(row.join(","));
+    }
+
+    const csvFile = new Blob([csv.join("\n")], {type: "text/csv"});
+    const downloadLink = document.createElement("a");
+    downloadLink.download = filename;
+    downloadLink.href = window.URL.createObjectURL(csvFile);
+    downloadLink.style.display = "none";
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+}
+
+function getAdjacentMonths(currentYearMonth) {
+    const [year, month] = currentYearMonth.split('-').map(Number);
+    
+    // Previous month
+    const prevDate = new Date(year, month - 2, 1);
+    const prevMonth = `${prevDate.getFullYear()}-${String(prevDate.getMonth() + 1).padStart(2, '0')}`;
+    
+    // Next month
+    const nextDate = new Date(year, month, 1);
+    const nextMonth = `${nextDate.getFullYear()}-${String(nextDate.getMonth() + 1).padStart(2, '0')}`;
+    
+    return {
+        prev: prevMonth,
+        next: nextMonth
+    };
+}
+</script>
+{{ end }}
