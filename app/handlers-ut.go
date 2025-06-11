@@ -333,6 +333,13 @@ func remoteHandler(w http.ResponseWriter, r *http.Request) {
 	http.ServeFile(w, r, "tmpl/remchk.html")
 }
 
+
+func _remchkHandler(w http.ResponseWriter, r *http.Request) {
+	http.ServeFile(w, r, "tmpl/_remchk.html")
+}
+
+
+
 func rootHandler(w http.ResponseWriter, r *http.Request) {
 
 	avviso_html := `
@@ -487,13 +494,15 @@ func setconsHandler(w http.ResponseWriter, r *http.Request) {
 	if len(quando_g) > 0 {
 		if len(chi) > 0 {
 			upd_day(quando_g, chi)
+			fmt.Fprintf(w, "Aggiornamento consuntivi per data = %s e risorsa = %s \n", quando_g, chi)
 		} else {
 			upd_day(quando_g)
+			fmt.Fprintf(w, "Aggiornamento consuntivi per data = %s \n", quando_g)
 		}
 	} else {
 		upd_day()
+		fmt.Fprintln(w, "Aggiornamento consuntivi per tutti i giorni e tutte le risorse")
 	}
-	fmt.Fprintf(w, "Consuntivi aggiornati per  data = %s e risorsa = %s ", quando_g, chi)
 }
 
 func debugHandler(w http.ResponseWriter, r *http.Request) {

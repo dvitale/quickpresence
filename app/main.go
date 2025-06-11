@@ -25,6 +25,7 @@ func main() {
 
 	mux.HandleFunc("/", rootHandler)                   //entry point telelav
 	mux.HandleFunc("/remote", remoteHandler)           //entry point telelav
+	mux.HandleFunc("/_remchk", _remchkHandler)           //entry point telelav
 	mux.HandleFunc("/showlogin", showloginHandler)     //entry point telelav
 	mux.HandleFunc("/remchk", remchkHandler)           //validazione utente telelav 1
 	mux.HandleFunc("/remtoken", remtokenHandler)       //validazione utente telelav 2
@@ -120,10 +121,15 @@ func main() {
 			})
 		}
 
-	*/
 	/////////////
 
 	s.Addr = ":8443"
 	s.ListenAndServeTLS("./certificate.crt", "./private.key")
+	        s.Addr = ":8443"
+        s.ListenAndServeTLS("./certificate.crt", "./private.key")
+        */
+
+        s.Addr = ":8003"
+        s.ListenAndServe()
 
 }
